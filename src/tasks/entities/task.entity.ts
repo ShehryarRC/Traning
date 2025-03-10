@@ -18,7 +18,6 @@ export class Task {
       })
       status: string;
 
-    @Column()
-    assiged_to:string;
-
+      @Column('simple-json') // Store user IDs as a JSON array
+      assigned_to: number[];
 }

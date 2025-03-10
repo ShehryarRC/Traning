@@ -1,20 +1,19 @@
-import { Column, PrimaryColumnOptions, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { IsArray, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateTaskDto {
 
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column()
+    @IsString()
     title: string;
 
-    @Column()
+    @IsString()
     description: string;
 
-    @Column({default:'pending', enum:['pending','in_progress','completed']})
+    @IsOptional()
+    @IsString()
     status: string;
 
-    @Column()
-    assiged_to:string;
+    @IsArray()
+    @IsNumber({}, { each: true }) // Validate that each element is a number
+    assigned_to:Array<number>;
 
 }

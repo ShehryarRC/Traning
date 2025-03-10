@@ -11,16 +11,21 @@ export class TasksService {
     private readonly tasksRepository: TasksRepository,
   ) {}
 
-  create(createTaskDto: CreateTaskDto) {
-    return  this.tasksRepository.create(createTaskDto);
+ async create(createTaskDto: CreateTaskDto) {
+    try{
+      const task = this.tasksRepository.create(createTaskDto); // Create instance
+      return await this.tasksRepository.save(task); 
+    }catch(e){
+      return e;
+    }
   }
 
   findAll() {
-    return `This action returns all tasks`;
+    return this.tasksRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  findTaskByUserId(id: number) {
+    return this.tasksRepository.findTasksByUserId(id);
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
