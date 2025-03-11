@@ -1,4 +1,9 @@
-import { Inject, Injectable , NotFoundException, InternalServerErrorException} from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { Users } from './users.entity';
 import { UsersDto } from './dto/create-users.dto';
@@ -17,9 +22,9 @@ export class UsersService {
     return this.usersRepository.findByEmail(email);
   }
 
-  async update(id,userData:UsersDto){
+  async update(id, userData: UsersDto) {
     try {
-      const user = await this.usersRepository.findOne({where:{id}});
+      const user = await this.usersRepository.findOne({ where: { id } });
 
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found.`);
@@ -30,13 +35,13 @@ export class UsersService {
       if (err instanceof NotFoundException) {
         throw err;
       }
-      throw new InternalServerErrorException('Failed to update user. Please try again later.');
+      throw new InternalServerErrorException(
+        'Failed to update user. Please try again later.',
+      );
     }
-  
   }
 
-  async deleteUser(id: number){
+  async deleteUser(id: number) {
     return this.usersRepository.delete(id);
   }
-  
 }

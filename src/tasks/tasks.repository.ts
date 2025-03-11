@@ -9,9 +9,14 @@ export class TasksRepository extends Repository<Task> {
   }
 
   async findTasksByUserId(userId: number) {
-    return this
-      .createQueryBuilder('task')
-      .where('task.assigned_to @> ARRAY[:userId]', { userId })
+    return this.createQueryBuilder('task')
+      .where('JSON_CONTAINS(task.assigned_to, :userId)', {
+        userId: JSON.stringify(userId),
+      })
       .getMany();
+  }
+
+  async findTasksByStatus(status: string) {
+    return this.find({ where: { status } });
   }
 }

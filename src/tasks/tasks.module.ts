@@ -17,6 +17,6 @@ import { TasksRepository } from './tasks.repository';
       inject: [DataSource],
     },
   ],
-  exports:['TASKS_REPOSITORY']
+  exports: ['TASKS_REPOSITORY'],
 })
 export class TasksModule {}
