@@ -8,9 +8,9 @@ export class PostRepository extends Repository<Post> {
     super(Post, dataSource.createEntityManager());
   }
 
-  async findPostsWithAuthors(authorId:number): Promise<Post[]> {
+  async findPostsWithAuthors(authorId: number): Promise<Post[]> {
     return this.find({
-        where: { author: { id: authorId } }, // Filtering by author ID
+      where: { author: { id: authorId } }, // Filtering by author ID
       relations: ['author'], // Fetch the related User entity
     });
   }

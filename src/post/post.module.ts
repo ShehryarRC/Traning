@@ -13,11 +13,10 @@ import { PostRepository } from './post.repository';
     PostService,
     {
       provide: 'POST_REPOSITORY',
-      useFactory: (dataSource: DataSource) =>
-        new PostRepository(dataSource),
-        inject: [DataSource],
-    }
+      useFactory: (dataSource: DataSource) => new PostRepository(dataSource),
+      inject: [DataSource],
+    },
   ],
-  exports: ['POST_REPOSITORY']
+  exports: ['POST_REPOSITORY'],
 })
 export class PostModule {}

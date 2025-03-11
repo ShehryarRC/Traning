@@ -17,7 +17,7 @@ export class PostController {
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
-     this.postService.create(createPostDto);
+    this.postService.create(createPostDto);
   }
 
   @Get()

@@ -5,17 +5,16 @@ import { PostRepository } from './post.repository';
 
 @Injectable()
 export class PostService {
-
   constructor(
     @Inject('POST_REPOSITORY')
     private readonly postRepository: PostRepository,
   ) {}
 
   create(createPostDto: CreatePostDto) {
-    try{
-    const post =  this.postRepository.create(createPostDto);
-    return this.postRepository.save(post);
-    }catch(e){
+    try {
+      const post = this.postRepository.create(createPostDto);
+      return this.postRepository.save(post);
+    } catch (e) {
       return e;
     }
   }
@@ -29,7 +28,7 @@ export class PostService {
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    return this.postRepository.update(id,updatePostDto);
+    return this.postRepository.update(id, updatePostDto);
   }
 
   remove(id: number) {

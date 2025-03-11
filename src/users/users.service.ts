@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { Users } from './users.entity';
+import { Users } from './entities/users.entity';
 import { UsersDto } from './dto/create-users.dto';
 
 @Injectable()

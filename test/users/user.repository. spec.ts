@@ -1,6 +1,6 @@
 import { UsersRepository } from '../../src/users/users.repository';
 import { Repository } from 'typeorm';
-import { Users } from '../../src/users/users.entity';
+import { Users } from '../../src/users/entities/users.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
