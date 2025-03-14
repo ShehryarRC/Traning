@@ -4,10 +4,10 @@ import { DataSource, Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 
 const mockTaskRepository = {
-    createQueryBuilder: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis(),
-    getMany: jest.fn(),
-  };
+  createQueryBuilder: jest.fn().mockReturnThis(),
+  where: jest.fn().mockReturnThis(),
+  getMany: jest.fn(),
+};
 
 describe('TasksRepository', () => {
   let tasksRepository: TasksRepository;
@@ -40,8 +40,11 @@ describe('TasksRepository', () => {
   describe('findTasksByUserId', () => {
     it('should call createQueryBuilder with the correct parameters and return tasks', async () => {
       const userId = 1;
-      const mockTasks = [{ id: 1, title: 'Task 1' }, { id: 2, title: 'Task 2' }];
-      
+      const mockTasks = [
+        { id: 1, title: 'Task 1' },
+        { id: 2, title: 'Task 2' },
+      ];
+
       // Mocking the response of getMany
       mockTaskRepository.getMany.mockResolvedValue(mockTasks);
 
@@ -49,7 +52,9 @@ describe('TasksRepository', () => {
       const result = await tasksRepository.findTasksByUserId(userId);
 
       // Asserting that the query builder methods were called with the expected arguments
-      expect(mockTaskRepository.createQueryBuilder).toHaveBeenCalledWith('task');
+      expect(mockTaskRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'task',
+      );
       expect(mockTaskRepository.where).toHaveBeenCalledWith(
         'JSON_CONTAINS(task.assigned_to, :userId)',
         { userId: JSON.stringify(userId) },
@@ -72,5 +77,4 @@ describe('TasksRepository', () => {
       expect(result).toEqual([]);
     });
   });
-
 });

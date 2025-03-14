@@ -10,17 +10,17 @@ export class PostService {
     private readonly postRepository: PostRepository,
   ) {}
 
-  create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto) {
     try {
-      const post = this.postRepository.create(createPostDto);
-      return this.postRepository.save(post);
+      const post = await this.postRepository.create(createPostDto);
+      return await this.postRepository.save(post);
     } catch (e) {
       return e;
     }
   }
 
-  findAll() {
-    return this.postRepository.find();
+  async findAll() {
+    return await this.postRepository.find();
   }
 
   findOne(id: number) {

@@ -20,7 +20,6 @@ export class TasksService {
   }
 
   findAll() {
-    console.log(":::>>>>>>>>>>>");
     return this.tasksRepository.find();
   }
 

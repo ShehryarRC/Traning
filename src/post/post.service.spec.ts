@@ -42,7 +42,7 @@ describe('PostService', () => {
         authorId: 1,
       };
       const createdPost = { id: 1, ...createPostDto };
-      
+
       mockPostRepository.create.mockReturnValue(createdPost);
       mockPostRepository.save.mockResolvedValue(createdPost);
 
@@ -60,7 +60,7 @@ describe('PostService', () => {
         authorId: 1,
       };
       const error = new Error('Database error');
-      
+
       mockPostRepository.create.mockImplementation(() => {
         throw error;
       });
@@ -95,13 +95,15 @@ describe('PostService', () => {
         id: postId,
         title: 'Test Post',
         content: 'Test Content',
-        author: { id: 1, name: 'John Doe' }
+        author: { id: 1, name: 'John Doe' },
       };
       mockPostRepository.findPostsWithAuthors.mockResolvedValue(post);
 
       const result = await service.findOne(postId);
 
-      expect(mockPostRepository.findPostsWithAuthors).toHaveBeenCalledWith(postId);
+      expect(mockPostRepository.findPostsWithAuthors).toHaveBeenCalledWith(
+        postId,
+      );
       expect(result).toEqual(post);
     });
   });
@@ -118,7 +120,10 @@ describe('PostService', () => {
 
       const result = await service.update(postId, updatePostDto);
 
-      expect(mockPostRepository.update).toHaveBeenCalledWith(postId, updatePostDto);
+      expect(mockPostRepository.update).toHaveBeenCalledWith(
+        postId,
+        updatePostDto,
+      );
       expect(result).toEqual(updateResult);
     });
   });

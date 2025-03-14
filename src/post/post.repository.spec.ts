@@ -35,8 +35,18 @@ describe('PostRepository', () => {
   describe('findPostsWithAuthors', () => {
     it('should return posts with the given author ID', async () => {
       const mockPosts: Post[] = [
-        { id: 1, title: 'Post 1', content: 'Content 1', author: { id: 1 } } as Post,
-        { id: 2, title: 'Post 2', content: 'Content 2', author: { id: 1 } } as Post,
+        {
+          id: 1,
+          title: 'Post 1',
+          content: 'Content 1',
+          author: { id: 1 },
+        } as Post,
+        {
+          id: 2,
+          title: 'Post 2',
+          content: 'Content 2',
+          author: { id: 1 },
+        } as Post,
       ];
 
       mockFind.mockResolvedValue(mockPosts);
@@ -51,7 +61,7 @@ describe('PostRepository', () => {
 
     it('should return an empty array if no posts are found', async () => {
       mockFind.mockResolvedValue([]);
-      
+
       const result = await postRepository.findPostsWithAuthors(2);
       expect(result).toEqual([]);
       expect(mockFind).toHaveBeenCalledWith({

@@ -11,7 +11,10 @@ describe('TasksService', () => {
     mockFind = jest.fn();
     const module: TestingModule = await Test.createTestingModule({
       providers: [TasksService],
-    }).overrideProvider(TasksRepository).useValue({}).compile();
+    })
+      .overrideProvider(TasksRepository)
+      .useValue({})
+      .compile();
 
     service = module.get<TasksService>(TasksService);
   });
@@ -22,13 +25,21 @@ describe('TasksService', () => {
   describe('createtasks', () => {
     it('should return posts with the given author ID', async () => {
       const mockPosts: Task[] = [
-        { id: 1, title: 'Post 1', description: 'Content 1', status: 'pending' } as Task,
-        { id: 2, title: 'Post 2', description: 'Content 2', status: 'pending' } as Task,
-      ]
+        {
+          id: 1,
+          title: 'Post 1',
+          description: 'Content 1',
+          status: 'pending',
+        } as Task,
+        {
+          id: 2,
+          title: 'Post 2',
+          description: 'Content 2',
+          status: 'pending',
+        } as Task,
+      ];
 
       mockFind.mockResolvedValue(mockPosts);
-
-    
     });
-})
+  });
 });
