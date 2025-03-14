@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Feedback } from 'src/feedback/entities/feedback.entity';
+import { Feedback } from '../../feedback/entities/feedback.entity';
 
 @Entity()
 export class Customers {

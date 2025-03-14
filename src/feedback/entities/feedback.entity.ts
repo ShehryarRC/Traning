@@ -5,8 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Customers } from 'src/customer/entities/customer.entity';
-
+import { Customers } from '../../customer/entities/customer.entity';
 @Entity()
 export class Feedback {
   @PrimaryGeneratedColumn()
