@@ -1,73 +1,67 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostRepository } from './post.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { TestDatabaseModule } from '../../test-database.module';
+import { PostRepository } from './post.repository';
 import { Post } from './entities/post.entity';
+import { Users } from '../users/entities/users.entity';
+import { Injectable } from '@nestjs/common';
 
-describe('PostRepository', () => {
-  let postRepository: PostRepository;
-  let mockDataSource: Partial<DataSource>;
-  let mockFind: jest.Mock;
+@Injectable()
+class PostRepositoryTest extends PostRepository {
+  constructor(dataSource: DataSource) {
+    super(dataSource);
+  }
+}
 
-  beforeEach(async () => {
-    mockFind = jest.fn();
+describe('PostRepository (Integration Test)', () => {
+  let module: TestingModule;
+  let postRepository: PostRepositoryTest;
+  let dbRepo: Repository<Post>;
+  let userRepo: Repository<Users>;
 
-    // Mock the DataSource and Repository
-    mockDataSource = {
-      createEntityManager: jest.fn().mockReturnValue({
-        find: mockFind,
-      }),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PostRepository,
-        { provide: DataSource, useValue: mockDataSource },
-      ],
+  // connected the test database and included the repository needed for testing the repository I am testing.
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      imports: [TestDatabaseModule, TypeOrmModule.forFeature([Post, Users])],
+      providers: [PostRepositoryTest],
     }).compile();
 
-    postRepository = module.get<PostRepository>(PostRepository);
+    postRepository = module.get(PostRepositoryTest);
+    dbRepo = module.get(DataSource).getRepository(Post);
+    userRepo = module.get(DataSource).getRepository(Users);
   });
 
-  it('should be defined', () => {
-    expect(postRepository).toBeDefined();
+  afterEach(async () => {
+    await dbRepo.createQueryBuilder().delete().execute();
+    await userRepo.createQueryBuilder().delete().execute();
   });
 
-  describe('findPostsWithAuthors', () => {
-    it('should return posts with the given author ID', async () => {
-      const mockPosts: Post[] = [
-        {
-          id: 1,
-          title: 'Post 1',
-          content: 'Content 1',
-          author: { id: 1 },
-        } as Post,
-        {
-          id: 2,
-          title: 'Post 2',
-          content: 'Content 2',
-          author: { id: 1 },
-        } as Post,
-      ];
+  afterAll(async () => {
+    await module.close();
+  });
 
-      mockFind.mockResolvedValue(mockPosts);
-
-      const result = await postRepository.findPostsWithAuthors(1);
-      expect(result).toEqual(mockPosts);
-      expect(mockFind).toHaveBeenCalledWith({
-        where: { author: { id: 1 } },
-        relations: ['author'],
-      });
+  it('should save and retrieve posts with an author', async () => {
+    const testUser = userRepo.create({
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com',
     });
 
-    it('should return an empty array if no posts are found', async () => {
-      mockFind.mockResolvedValue([]);
+    await userRepo.save(testUser);
 
-      const result = await postRepository.findPostsWithAuthors(2);
-      expect(result).toEqual([]);
-      expect(mockFind).toHaveBeenCalledWith({
-        where: { author: { id: 2 } },
-        relations: ['author'],
-      });
+    const testPost = dbRepo.create({
+      title: 'Test Post',
+      content: 'This is a test',
+      author: testUser,
     });
+
+    await dbRepo.save(testPost);
+
+    const result = await postRepository.findPostsWithAuthors(1);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe('Test Post');
+    expect(result[0].author.id).toBe(1);
   });
 });
